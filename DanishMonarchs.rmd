@@ -1,6 +1,6 @@
 ---
 title: "Danish Kings Data Analysis"
-Group: "Philip & Frida"
+Author: "Philip"
 date: "2025-03-13"
 output:
   html_document: default
@@ -75,26 +75,7 @@ You can calculate the duration of reign in years with `mutate` function by subtr
 * Is your data messy? Fix it before re-importing to R
 * Do your start and end of reign columns contain NAs? Choose the right strategy to deal with them: `na.omit()`, `na.rm=TRUE`, `!is.na()`
 
-#We load these libraries for they give functions that make data manipulation easier.
-#stringr is loaded for cleaning text data.
-library(dplyr)
-library(stringr)
 
-#Clean the columns removing extra spaces and invalid characters.
-kings <- kings %>%
-  mutate(
-    Start_year = as.numeric(str_trim(Start_year)),  # remove spaces
-    End_year   = as.numeric(str_trim(End_year))
-  )
-
-#Remove rows with missing years
-kings <- kings %>%
-  filter(!is.na(Start_year), !is.na(End_year))
-
-#Calculate duration
-kings <- kings %>%
-  mutate(years_reigned = End_year - Start_year)
-#I have now created a column called years_reigned.
 
 
 
@@ -102,8 +83,25 @@ Create a new column called  `duration` in the kings dataset, utilizing the `muta
 
 ```{r}
 # YOUR CODE
+#We load these libraries for they give functions that make data manipulation easier.
+#stringr is loaded for cleaning text data.
+
+library(dplyr)
+library(stringr)
+
+# Clean Start_year and End_year, remove extra spaces, convert to numeric
 kings <- kings %>%
+  mutate(
+    Start_year = as.numeric(str_trim(Start_year)),
+    End_year   = as.numeric(str_trim(End_year))
+  ) %>%
+  # Remove rows with missing years
+  filter(!is.na(Start_year), !is.na(End_year)) %>%
+  # Calculate years reigned
   mutate(years_reigned = End_year - Start_year)
+
+# Check the first rows
+head(kings)
 ```
 
 ## Calculate the average duration of reign for all rulers
@@ -238,6 +236,7 @@ ggplot(kings, aes(x = midyear, y = years_reigned)) +
 #This added a title, clearer axis labels and black and white theme, and larger readable text to size 14.
 
 ```
+
 
 And to submit this rmarkdown, knit it into html. But first, clean up the code chunks, adjust the date, rename the author and change the `eval=FALSE` flag to `eval=TRUE` so your script actually generates an output.
 Well done!
